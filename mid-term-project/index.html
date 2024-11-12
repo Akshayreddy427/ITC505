@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Adventure Game</title>
+  <link rel="stylesheet" href="mid.css">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #c01a1a89;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  background-color: hsl(111, 68%, 50%);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: hsl(242, 34%, 85%);
+}
+
+#story-text {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #0099cb;
+  color: rgb(17, 12, 12);
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #005f73;
+}
+
+footer {
+  text-align: center;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+}
+
+#image-section img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+#addendum {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#addendum h2 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#addendum p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    text-align: justify;
+    margin-bottom: 15px;
+}
+
+#addendum p:last-child {
+    margin-bottom: 0;
+}
+
+#addendum p:hover {
+    color: #4CAF50;
+}
+
+</style>
+</head>
+<body>
+    <h1>Choose Your Own Adventure</h1>
+    <h2 align="center">Cricket</h2>
+  <div class="container">
+    <header>
+        
+      
+      <p>Author: Akshay Reddy, Date: 31 October 2024, Course: ITC 505</p>
+    </header>
+
+    <main>
+      <section id="story">
+        <!-- The story text will go here -->
+        <p id="story-text"></p>
+        <div id="choices">
+          <!-- Choices buttons will go here -->
+        </div>
+        <div id="image-section">
+          <!-- Image related to the current stage will go here -->
+        </div>
+      </section>
+
+      <button id="start-button" onclick="startGame()">Start Game</button>
+    </main>
+
+    <footer>
+      <p>Last updated: <span id="lastModified"></span></p>
+    </footer>
+  </div>
+
+  <script>
+// Define the cricket game stages
+const cricketGameStages = {
+    start: {
+      text: "Welcome to the Cricket Match! You are the captain of your team. It's your turn to make a decision. Do you choose to bat first or bowl first?",
+      choices: [
+        { option: "Bat First", consequence: "batting" },
+        { option: "Bowl First", consequence: "bowling" }
+      ],
+      image: "cricket_start.jpg"
+    },
+    batting: {
+      text: "You're batting. The first ball is bowled. Do you go for a risky shot or play it safe?",
+      choices: [
+        { option: "Go for the risky shot", consequence: "riskyShot" },
+        { option: "Play it safe", consequence: "safeShot" }
+      ],
+      image: "batting.jpg"
+    },
+    bowling: {
+      text: "You're bowling. The batsman is on strike. Do you bowl a fast delivery or a spin delivery?",
+      choices: [
+        { option: "Bowling Fast", consequence: "fastBowl" },
+        { option: "Bowling Spin", consequence: "spinBowl" }
+      ],
+      image: "bowling.jpg"
+    },
+    riskyShot: {
+      text: "Oh no! You missed the shot and got out! The crowd is silent. Game over.",
+      choices: [],
+      image: "out.jpg"
+    },
+    safeShot: {
+      text: "Nice! You played it safe and scored some runs. Your team is doing well. Now the next ball comes. Do you want to go for a boundary or keep rotating the strike?",
+      choices: [
+        { option: "Go for a Boundary", consequence: "boundary" },
+        { option: "Keep rotating the strike", consequence: "rotateStrike" }
+      ],
+      image: "safeShot.jpg"
+    },
+    fastBowl: {
+      text: "You bowled a fast delivery, and the batsman played a defensive shot. Good job! Now, do you want to bowl again or change strategy?",
+      choices: [
+        { option: "Bowl again", consequence: "bowling" },
+        { option: "Change strategy", consequence: "changeStrategy" }
+      ],
+      image: "fastBowl.jpg"
+    },
+    spinBowl: {
+      text: "You bowled a spin delivery, and the batsman missed it! The crowd cheers! Now, do you want to bowl again or change strategy?",
+      choices: [
+        { option: "Bowl again", consequence: "bowling" },
+        { option: "Change strategy", consequence: "changeStrategy" }
+      ],
+      image: "spinBowl.jpg"
+    },
+    boundary: {
+      text: "You hit a beautiful boundary! Your team is pumped up, and you're leading the match. Great work!",
+      choices: [],
+      image: "boundary.jpg"
+    },
+    rotateStrike: {
+      text: "You rotated the strike and kept your wicket safe. Your team is accumulating runs steadily. Well done!",
+      choices: [],
+      image: "rotateStrike.jpg"
+    },
+    changeStrategy: {
+      text: "You decided to change the strategy. Do you want to bring in a new bowler or change the batting order?",
+      choices: [
+        { option: "Change bowler", consequence: "bowling" },
+        { option: "Change batting order", consequence: "batting" }
+      ],
+      image: "changeStrategy.jpg"
+    }
+  };
+  
+  // Initialize game
+  let currentStage = "start";
+  
+  function startGame() {
+    document.getElementById("start-button").style.display = "none"; // Hide the start button
+    updatePage();
+  }
+  
+  // Update page with current stage
+  function updatePage() {
+    const stage = cricketGameStages[currentStage];
+    document.getElementById("story-text").textContent = stage.text;
+    
+    // Set the background image for the stage
+    document.getElementById("image-section").style.backgroundImage = `url(${stage.image})`;
+    
+    // Clear previous choices
+    const choicesDiv = document.getElementById("choices");
+    choicesDiv.innerHTML = "";
+  
+    // Create new buttons for each choice
+    stage.choices.forEach(choice => {
+      const button = document.createElement("button");
+      button.textContent = choice.option;
+      button.onclick = () => {
+        currentStage = choice.consequence;
+        updatePage();
+      };
+      choicesDiv.appendChild(button);
+    });
+  
+    // If no choices left, end the game
+    if (stage.choices.length === 0) {
+      const button = document.createElement("button");
+      button.textContent = "Restart the Game";
+      button.onclick = () => {
+        currentStage = "start";
+        document.getElementById("start-button").style.display = "block"; // Show the start button
+        updatePage();
+      };
+      choicesDiv.appendChild(button);
+    }
+  }
+  
+  // Initialize game on load
+  window.onload = function() {
+    document.getElementById("lastModified").textContent = document.lastModified;
+  };
+  
+  </script>
+    var x = document.lastModified;
+    document.getElementById('lastModified').textContent = x;
+  </script>
+  <section id="addendum">
+    <h2>Addendum</h2>
+    <p>The cricket-themed "Choose Your Own Adventure" game successfully combined interactive storytelling with sports.</p>
+    <p>It allowed players to make decisions as they navigate through a cricket match, with outcomes influenced by choices like batting strategies and bowling tactics.</p>
+    <p> By utilizing HTML, CSS, and JavaScript, the game dynamically updates the content, including text and images, based on user choices.</p>
+    <p>The project enhanced my understanding of event handling and DOM manipulation in JavaScript. It also taught me how to structure a game with multiple possible endings, ensuring replayability and engagement. </p>
+    <p>The use of cricket scenarios made the game more relatable and fun for fans of the sport. Challenges in managing game flow and image selection were overcome through careful planning and testing. </p>
+    
+
+
+
+
+
+    </p>
+</body>
+</html>
