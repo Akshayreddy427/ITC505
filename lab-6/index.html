@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prime Game</title>
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+  }
+  
+  h1, h2 {
+    color: hsl(125, 68%, 63%);
+    text-align: center;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-areas:
+      "header header header"
+      "sidebar main ad"
+      "footer footer footer";
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    gap: 10px;
+  }
+  
+  header {
+    grid-area: header;
+    background-color: #f321f0;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .sidebar {
+    grid-area: sidebar;
+    background-color: #bb3a3a;
+    padding: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin: 10px 0;
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #2196F3;
+  }
+  
+  .sidebar a:hover {
+    text-decoration: underline;
+  }
+  
+  main {
+    grid-area: main;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ad {
+    grid-area: ad;
+    background-color: #f4f4f4;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  footer {
+    grid-area: footer;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  input, button {
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+  }
+  
+  button {
+    background-color: #10165b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #4a684b;
+  }
+  
+  output {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-top: 10px;
+    display: block;
+  }
+  
+  #errorMessage {
+    color: #FF5722;
+    font-weight: bold;
+  }
+  </style>
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Welcome to My Interactive Page</h1>
+    </header>
+
+    <nav class="sidebar">
+      <h3>Menu</h3>
+      <ul>
+        <li><a href="https://www.facebook.com/" target="_blank" id="about-link">Home</a></li> <!-- Updated link -->
+        <li><a href="https://www.facebook.com/" target="_blank" id="about-link">About</a></li> <!-- Updated link -->
+        <li><a href="https://www.facebook.com/" target="_blank" id="about-link">Contact</a></li> <!-- Updated link -->
+      </ul>
+    </nav>
+
+    <main>
+      <h2>Prime tool</h2>
+      <div id="content">
+        <!-- JavaScript will inject the interactive elements here -->
+      </div>
+    </main>
+
+    <aside class="ad">
+      <h3>Sponsored</h3>
+      <a href="https://www.amazon.com" target="_blank">
+        <img src="ads.jpg" alt="Advertisement" style="width:100%; height:auto;">
+      </a>
+    </aside>
+
+    <footer>
+      <p>Addendum: This page demonstrates an interactive page using JavaScript.</p>
+      <p>Last updated: <span id="lastModified"></span></p>
+    </footer>
+  </div>
+
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const contentDiv = document.getElementById("content");
+  
+    // Create input, button, and output elements
+    const input = document.createElement("input");
+    input.type = "number";
+    input.placeholder = "Enter a number";
+    input.style.marginRight = "10px";
+  
+    const button = document.createElement("button");
+    button.textContent = "Check Prime";
+  
+    const output = document.createElement("output");
+    const errorMessage = document.createElement("p");
+    errorMessage.id = "errorMessage";
+  
+    // Append elements to content
+    contentDiv.appendChild(input);
+    contentDiv.appendChild(button);
+    contentDiv.appendChild(errorMessage);
+    contentDiv.appendChild(output);
+  
+    button.addEventListener("click", () => {
+      const inputValue = input.value.trim();
+  
+      if (inputValue === "") {
+        errorMessage.textContent = "Please enter a number.";
+        output.textContent = "";
+        return;
+      }
+  
+      const number = parseInt(inputValue, 10);
+      if (isNaN(number) || number <= 1) {
+        errorMessage.textContent = "Please enter a valid number greater than 1.";
+        output.textContent = "";
+        return;
+      }
+  
+      errorMessage.textContent = ""; // Clear error message
+  
+      if (isPrime(number)) {
+        output.textContent = `${number} is a Prime Number.`;
+      } else {
+        output.textContent = `${number} is NOT a Prime Number.`;
+      }
+    });
+  
+    // Function to check if a number is prime
+    function isPrime(num) {
+      if (num <= 1) return false;
+      for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
+      }
+      return true;
+    }
+  });
+  
+</script>
+ 
+</body>
+</html>
