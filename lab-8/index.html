@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        form {
+            background: #ffffff;
+            width: 100%;
+            max-width: 380px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: #d9534f;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            text-align: left;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            background-color: #fafafa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+        }
+
+        .close {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            background-color: #e32f2f;
+        }
+
+        .addendum {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .addendum h3 {
+            color: #4CAF50;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .addendum p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Modal (Pop-up Box) -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">Success!</div>
+        <div>Your form has been successfully submitted! 🎉</div>
+        <div class="modal-footer">
+            <button class="close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<form id="registrationForm" class="form-container" onsubmit="return validateForm(event)">
+    <h2>Create an Account</h2>
+    
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" required>
+    
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName" required>
+    
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+    
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+    
+    <input type="submit" value="Submit">
+    
+    <div id="errorMessages" class="error"></div>
+</form>
+
+<!-- Addendum Section -->
+<div class="addendum">
+    <h3>Form Explanation</h3>
+    <p>This registration form allows you to create an account by entering your personal details, including your first name, last name, email address, password, and password confirmation.</p>
+    <p>We perform validation on the following aspects:</p>
+    <ul>
+        <li><strong>First Name and Last Name:</strong> We ensure that no numbers are entered in these fields.</li>
+        <li><strong>Email:</strong> We validate that the email address follows a proper format (e.g., username@example.com).</li>
+        <li><strong>Password:</strong> Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.</li>
+        <li><strong>Confirm Password:</strong> The "Confirm Password" field must match the password field to ensure accuracy.</li>
+    </ul>
+    <p>Upon successful form submission, a green success banner will appear at the top of the page. This indicates that your form has been successfully submitted.</p>
+</div>
+
+<script>
+// XSS Prevention: Escape any user input if we ever display it dynamically (not necessary here, but for demonstration)
+function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, function(match) {
+        const escapeChars = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+        return escapeChars[match];
+    });
+}
+
+// SQL Injection Prevention: In the front-end, we can't directly prevent SQL injection but we can restrict input.
+function sanitizeSQLInput(str) {
+    return str.replace(/['";\-]/g, ''); // Properly escaped the dash in the character class
+}
+
+function validateForm(event) {
+    event.preventDefault();  // Prevent form submission to allow validation
+
+    let errorMessages = [];
+    let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Check for empty fields
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        errorMessages.push("All fields are required.");
+    }
+
+    // Validate first name and last name: No numbers allowed
+    let namePattern = /^[A-Za-z]+$/;  // Only allows letters (A-Z, a-z)
+    if (!namePattern.test(firstName)) {
+        errorMessages.push("First Name should not contain numbers.");
+    }
+    if (!namePattern.test(lastName)) {
+        errorMessages.push("Last Name should not contain numbers.");
+    }
+
+    // Sanitize SQL-sensitive characters
+    firstName = sanitizeSQLInput(firstName);
+    lastName = sanitizeSQLInput(lastName);
+    email = sanitizeSQLInput(email);
+    password = sanitizeSQLInput(password);
+    confirmPassword = sanitizeSQLInput(confirmPassword);
+
+    // Validate email format
+    let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!email.match(emailPattern)) {
+        errorMessages.push("Please enter a valid email address.");
+    }
+
+    // Validate password strength
+    let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!password.match(passwordPattern)) {
+        errorMessages.push("Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+    }
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+        errorMessages.push("Passwords do not match.");
+    }
+
+    // Display errors or submit form
+    let errorDiv = document.getElementById("errorMessages");
+    if (errorMessages.length > 0) {
+        errorDiv.innerHTML = errorMessages.join("<br>");
+    } else {
+        errorDiv.innerHTML = "";  // Clear any existing error messages
+
+        // Display the success modal
+        document.getElementById("successModal").style.display = 'flex';
+
+        // Clear the form fields
+        document.getElementById("registrationForm").reset();
+    }
+}
+
+// Close the modal
+function closeModal() {
+    document.getElementById("successModal").style.display = 'none';
+}
+</script>
+
+</body>
+</html>
